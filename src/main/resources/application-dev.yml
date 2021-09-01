@@ -1,0 +1,33 @@
+# ---------- MySql ----------
+# Sharding-jdbc
+spring:
+  shardingsphere:
+    datasource:
+      names: master,slave0
+      # –¥ø‚
+      master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.1.57:3306/ejs_shop?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&serverTimezone=GMT%2b8
+        username: rdw
+        password: 58.rdw.XiYue-0752.com
+      # ∂¡ø‚
+      slave0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://192.168.1.57:3306/ejs_shop?useSSL=false&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&serverTimezone=GMT%2b8
+        username: rdw
+        password: 58.rdw.XiYue-0752.com
+    # ∂¡–¥∑÷¿Î≈‰÷√
+    masterslave:
+      name: ms
+      master-data-source-name: master
+      slave-data-source-names: slave0
+    props:
+      sql:
+        show: true
+
+# Mybatis Plus
+mybatis-plus:
+  mapper-locations:
+    classpath:/mapper/**/*Mapper.xml
