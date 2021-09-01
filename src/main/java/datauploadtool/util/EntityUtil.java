@@ -54,6 +54,7 @@ public class EntityUtil {
         tempMap.put("id", "123");
         String sql = EntityUtil.getSqlStr("member", tempMap);
         System.out.println(sql);
+        System.out.println(sql);
     }
 
 }
