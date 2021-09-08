@@ -2,12 +2,17 @@ package datauploadtool.entity;
 
 import com.alibaba.druid.util.StringUtils;
 import datauploadtool.uploadtool.common.IEntity;
+import datauploadtool.util.DateUtil;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.text.ParseException;
+import java.util.Date;
+
 @Getter
 @NoArgsConstructor
+@Builder
 public class Member implements IEntity {
 
     private static final String TABLE_NAME = "member";
@@ -42,8 +47,11 @@ public class Member implements IEntity {
     private Integer sellerCommunityShopId;
     private final String sellerCommunityShopIdStr = "seller_community_shop_id";
 
+    private Date registerTime;
+    private final String registerTimeStr = "register_time";
+
     @Override
-    public void setValue(String fieldStr, String fieldValue) {
+    public void setValue(String fieldStr, String fieldValue) throws ParseException {
         if (StringUtils.equals(fieldStr, this.idStr)) {
             this.id = Integer.valueOf(String.valueOf(fieldValue));
         } else if (StringUtils.equals(fieldStr, this.nameStr)) {
@@ -62,6 +70,8 @@ public class Member implements IEntity {
             this.status = Integer.valueOf(fieldValue);
         } else if (StringUtils.equals(fieldStr, this.sellerCommunityShopIdStr)) {
             this.sellerCommunityShopId = Integer.valueOf(fieldValue);
+        } else if (StringUtils.equals(fieldStr, this.registerTimeStr)) {
+            this.registerTime = DateUtil.toDate(fieldValue);
         }
     }
 
@@ -70,7 +80,7 @@ public class Member implements IEntity {
         StringBuilder builder = new StringBuilder();
         builder.append("INSERT INTO ");
         builder.append(TABLE_NAME);
-        builder.append("(");
+        builder.append(" (");
         if (null != this.id) {
             builder.append(this.idStr);
             builder.append(",");
@@ -105,6 +115,10 @@ public class Member implements IEntity {
         }
         if (null != this.sellerCommunityShopId) {
             builder.append(this.sellerCommunityShopIdStr);
+            builder.append(",");
+        }
+        if (null != this.registerTime) {
+            builder.append(this.registerTimeStr);
             builder.append(",");
         }
         builder.deleteCharAt(builder.length() - 1);
@@ -143,6 +157,10 @@ public class Member implements IEntity {
         }
         if (null != this.sellerCommunityShopId) {
             builder.append(this.getSellerCommunityShopId());
+            builder.append(",");
+        }
+        if (null != this.registerTime) {
+            builder.append("'" + DateUtil.toString(this.getRegisterTime()) + "'");
             builder.append(",");
         }
         builder.deleteCharAt(builder.length() - 1);

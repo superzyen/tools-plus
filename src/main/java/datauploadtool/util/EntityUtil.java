@@ -1,8 +1,5 @@
 package datauploadtool.util;
 
-import com.google.common.collect.Maps;
-import datauploadtool.uploadtool.common.RegistedEntityTable;
-import datauploadtool.uploadtool.common.RegistedToolTable;
 import datauploadtool.uploadtool.common.TableRegister;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,20 +38,9 @@ public class EntityUtil {
         Object obj = EntityUtil.transform(tableName, fieldMap);
         Class clazz = obj.getClass();
         Method m = clazz.getDeclaredMethod("getSqlString", new Class[]{});
-        return String.valueOf(m.invoke(obj));
-    }
-
-    public static void main(String[] args) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-
-        //初始化工具表单
-        RegistedToolTable.initializeTable();
-        //初始化实体类表单
-        RegistedEntityTable.initializeTable();
-        Map<String, String> tempMap = Maps.newHashMap();
-        tempMap.put("id", "123");
-        String sql = EntityUtil.getSqlStr("member", tempMap);
-        System.out.println(sql);
-        System.out.println(sql);
+        String sql = String.valueOf(m.invoke(obj));
+        log.info("sql:{}", sql);
+        return sql;
     }
 
 }
