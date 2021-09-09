@@ -1,10 +1,12 @@
-package datauploadtool.util;
+package datauploadtool.mysql.util;
 
 import com.google.common.collect.Maps;
 import datauploadtool.annotation.TableField;
 import datauploadtool.exception.NoTypeMapException;
-import datauploadtool.uploadtool.common.TableRecord;
-import datauploadtool.uploadtool.common.TableRegister;
+import datauploadtool.mysql.common.TableRecord;
+import datauploadtool.mysql.common.TableRegister;
+import datauploadtool.util.DateUtils;
+import datauploadtool.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Constructor;
@@ -71,7 +73,15 @@ public class EntityUtils {
         }
     }
 
-    public static EntityUtils analyse(String tableName) {
+    /**
+     * 数据与实体类的映射都基于此方法
+     * 先调用该方法进行解析之后，再进行其他操作
+     *
+     * @return
+     * @author wenzy
+     * @date 2021/9/9 10:02
+     */
+    public static EntityMapping analyse(String tableName) {
         Map<String, Class> entityMap = TableRegister.getInstance().getEntityMap();
         if (entityMap.containsKey(tableName)) {
             Class clazz = entityMap.get(tableName);
@@ -91,8 +101,94 @@ public class EntityUtils {
             setThreadTypeMap(typeMap);
             setThreadNameeMap(nameMap);
         }
-        return new EntityUtils();
+        return new EntityMapping(tableName);
     }
+
+
+    /**
+     * 基于分析方法之后的映射对象操作{@linkplain EntityUtils#analyse(String)}
+     *
+     * @author wenzy
+     * @date 2021/9/9 10:26
+     */
+    public static class EntityMapping {
+
+        private String tableName;
+
+        protected EntityMapping() {
+        }
+
+        protected EntityMapping(String tableName) {
+            this.tableName = tableName;
+        }
+
+        /**
+         * 通过反射得到转换后的class 对象，得到实体类的sql 语句，后直接执行sql
+         */
+        public String getSqlStr(TableRecord tableRecord) throws Exception {
+            List<String> fieldList = tableRecord.getFields();
+            Map<Integer, Map<String, String>> recordsMap = tableRecord.getRecords();
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("INSERT INTO ");
+            builder.append(this.tableName);
+            builder.append(" (");
+            for (String field : fieldList) {
+                builder.append(field);
+                builder.append(",");
+            }
+            builder.deleteCharAt(builder.length() - 1);
+            builder.append(") VALUES ");
+            for (Integer index : recordsMap.keySet()) {
+                Map<String, String> record = recordsMap.get(index);
+                builder.append(oneRecord(record));
+                builder.append(",");
+            }
+            builder.deleteCharAt(builder.length() - 1);
+            return builder.toString();
+        }
+
+        private String oneRecord(Map<String, String> recordMap) throws Exception {
+            StringBuilder builder = new StringBuilder();
+            builder.append("(");
+            Long id = Thread.currentThread().getId();
+            Map<String, Class> typeMap = null;
+            if (threadTypeMap.containsKey(id)) {
+                typeMap = threadTypeMap.get(id);
+            } else {
+                throw new NoTypeMapException("threadTypeMap 为空，请先分析字段的类型");
+            }
+            for (String name : recordMap.keySet()) {
+                String val = recordMap.get(name);
+                Class type = null;
+                if (typeMap.containsKey(name)) {
+                    type = typeMap.get(name);
+                }
+                if (null != val && val != "") {
+                    if (type == Integer.class) {
+                        builder.append(val);
+                    } else if (type == String.class) {
+                        builder.append("'" + val + "'");
+                    } else if (type == Date.class) {
+                        builder.append("'" + val + "'");
+                    } else {
+                        log.error("无法识别的实体类字段类型, type:{}", type);
+                        System.out.println("实体类字段转换错误，请与super_zyen联系");
+                        return null;
+                    }
+                    builder.append(",");
+                } else {
+                    builder.append("null");
+                    builder.append(",");
+                }
+            }
+            builder.deleteCharAt(builder.length() - 1);
+            builder.append(")");
+            return builder.toString();
+        }
+
+    }
+
 
     public static Object matchType(String val, Class type) throws ParseException {
         if (type == Integer.class) {
@@ -136,65 +232,5 @@ public class EntityUtils {
         return null;
     }
 
-    /**
-     * 通过反射得到转换后的class 对象，得到实体类的sql 语句，后直接执行sql
-     */
-    public static String getSqlStr(String tableName, TableRecord tableRecord) {
-        List<String> fieldList = tableRecord.getFields();
-
-        StringBuilder builder = new StringBuilder();
-        builder.append("INSERT INTO ");
-        builder.append(tableName);
-        builder.append(" (");
-        for (String field : fieldList) {
-            builder.append(field);
-            builder.append(",");
-        }
-        builder.deleteCharAt(builder.length() - 1);
-        builder.append(") VALUES ");
-        
-        builder.deleteCharAt(builder.length() - 1);
-        builder.append(")");
-        return builder.toString();
-    }
-
-    private static String oneRecord(Map<String, String> recordMap) throws Exception {
-        StringBuilder builder = new StringBuilder();
-        builder.append("(");
-        Long id = Thread.currentThread().getId();
-        Map<String, Class> typeMap = null;
-        if (threadTypeMap.containsKey(id)) {
-            typeMap = threadTypeMap.get(id);
-        } else {
-            throw new NoTypeMapException("threadTypeMap 为空，请先分析字段的类型");
-        }
-        for (String name : recordMap.keySet()) {
-            String val = recordMap.get(name);
-            Class type = null;
-            if (typeMap.containsKey(name)) {
-                type = typeMap.get(name);
-            }
-            if (null != val && val != "") {
-                if (type == Integer.class) {
-                    builder.append(val);
-                } else if (type == String.class) {
-                    builder.append("'" + val + "'");
-                } else if (type == Date.class) {
-                    builder.append("'" + val + "'");
-                } else {
-                    log.error("无法识别的实体类字段类型, type:{}", type);
-                    System.out.println("实体类字段转换错误，请与super_zyen联系");
-                    return null;
-                }
-                builder.append(",");
-            } else {
-                builder.append("null");
-                builder.append(",");
-            }
-        }
-        builder.deleteCharAt(builder.length() - 1);
-        builder.append(")");
-        return builder.toString();
-    }
 
 }

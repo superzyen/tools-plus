@@ -1,4 +1,4 @@
-package datauploadtool.uploadtool.common;
+package datauploadtool.mysql.common;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -27,6 +27,10 @@ public class TableRecord {
 
     public Map<Integer, Map<String, String>> getRecords() {
         return this.records;
+    }
+
+    public void setFields(List<String> fields) {
+        this.fields = fields;
     }
 
     public List<String> getFields() {

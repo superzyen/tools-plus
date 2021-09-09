@@ -1,6 +1,6 @@
-package datauploadtool.uploadtool.common;
+package datauploadtool.mysql.common;
 
-import datauploadtool.service.impl.MysqlUploadToolImpl;
+import datauploadtool.mysql.service.impl.MysqlUploadToolImpl;
 
 public class RegistedToolTable {
 

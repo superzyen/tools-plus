@@ -1,6 +1,4 @@
-package datauploadtool.uploadtool.common;
-
-import java.text.ParseException;
+package datauploadtool.mysql.common;
 
 public interface IEntity {
 

@@ -1,19 +1,21 @@
-package datauploadtool.uploadtool;
+package datauploadtool.mysql;
 
-import datauploadtool.service.tool.IToolSelectionMode;
-import datauploadtool.uploadtool.common.RegistedEntityTable;
-import datauploadtool.uploadtool.common.RegistedToolTable;
-import datauploadtool.uploadtool.common.UploadToolRegister;
+import datauploadtool.mysql.service.tool.IToolSelectionMode;
+import datauploadtool.mysql.common.RegistedEntityTable;
+import datauploadtool.mysql.common.RegistedToolTable;
+import datauploadtool.mysql.common.UploadToolRegister;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 @Slf4j
+@Component
 public class UploadTool {
 
-    public static void main(String[] args) {
+    public void toolMain() {
 
         init();
         List<IToolSelectionMode> iToolSelectionModeList = UploadToolRegister.getInstance().getToolList();

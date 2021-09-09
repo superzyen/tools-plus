@@ -1,6 +1,4 @@
-package datauploadtool.service.tool;
-
-import java.io.IOException;
+package datauploadtool.mysql.service.tool;
 
 public interface IToolSelectionMode {
     void introduceTool();

@@ -1,4 +1,4 @@
-package datauploadtool.mapper;
+package datauploadtool.mysql.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

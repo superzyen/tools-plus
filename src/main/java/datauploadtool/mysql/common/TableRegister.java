@@ -1,4 +1,4 @@
-package datauploadtool.uploadtool.common;
+package datauploadtool.mysql.common;
 
 import com.google.common.collect.Maps;
 

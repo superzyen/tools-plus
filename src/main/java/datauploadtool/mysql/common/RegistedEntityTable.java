@@ -1,7 +1,7 @@
-package datauploadtool.uploadtool.common;
+package datauploadtool.mysql.common;
 
-import datauploadtool.entity.Member;
-import datauploadtool.entity.News;
+import datauploadtool.mysql.entity.Member;
+import datauploadtool.mysql.entity.News;
 
 public class RegistedEntityTable {
     /**

@@ -1,7 +1,6 @@
-package datauploadtool.entity;
+package datauploadtool.mysql.entity;
 
-import datauploadtool.uploadtool.common.IEntity;
-import datauploadtool.util.DateUtils;
+import datauploadtool.mysql.common.IEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

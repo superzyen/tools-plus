@@ -1,7 +1,7 @@
-package datauploadtool.uploadtool.common;
+package datauploadtool.mysql.common;
 
 import com.google.common.collect.Lists;
-import datauploadtool.service.tool.IToolSelectionMode;
+import datauploadtool.mysql.service.tool.IToolSelectionMode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
