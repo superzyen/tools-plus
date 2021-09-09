@@ -5,5 +5,5 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface MemberMapper {
-    boolean insert(@Param("sql") String sqlStr);
+    boolean insert(@Param("object") Object obj);
 }

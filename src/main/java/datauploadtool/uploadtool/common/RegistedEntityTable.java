@@ -1,6 +1,7 @@
 package datauploadtool.uploadtool.common;
 
 import datauploadtool.entity.Member;
+import datauploadtool.entity.News;
 
 public class RegistedEntityTable {
     /**
@@ -10,5 +11,6 @@ public class RegistedEntityTable {
     public static void initializeTable() {
         TableRegister tableRegister = TableRegister.getInstance();
         tableRegister.register(new Member());
+        tableRegister.register(new News());
     }
 }

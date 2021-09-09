@@ -14,7 +14,7 @@ import java.util.GregorianCalendar;
  * @author superzyen
  * @date 2021/9/7 16:48
  */
-public class DateUtil {
+public class DateUtils {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter DATE_TIME_FORMATTER_YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyy-MM-dd");

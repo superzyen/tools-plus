@@ -8,8 +8,4 @@ public interface IEntity {
 
     String getTableName();
 
-    void setValue(String fieldStr, String fieldValue) throws ParseException;
-
-    String getSqlString();
-
 }

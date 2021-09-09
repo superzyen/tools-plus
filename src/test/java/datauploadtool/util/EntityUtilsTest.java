@@ -10,10 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = DataUploadToolApplication.class)
-class EntityUtilTest {
+class EntityUtilsTest {
 
 
     @BeforeEach
@@ -22,17 +23,17 @@ class EntityUtilTest {
     }
 
     @Test
-    void main() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    void main() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, ParseException {
         //初始化工具表单
         RegistedToolTable.initializeTable();
         //初始化实体类表单
         RegistedEntityTable.initializeTable();
         Map<String, String> tempMap = Maps.newHashMap();
-        tempMap.put("name", "tooltest");
-        tempMap.put("password", "tooltest");
-        tempMap.put("register_time", "2021-09-07 17:42:00");
-        String sql = EntityUtil.getSqlStr("member", tempMap);
-        MemberMapper mapper = BeanUtil.getBean(MemberMapper.class);
-        mapper.insert(sql);
+        tempMap.put("type_id", "9");
+        tempMap.put("title", "zyentool");
+        tempMap.put("status", "2");
+        Object object=EntityUtils.transform("news",tempMap);
+        MemberMapper mapper = BeanUtils.getBean(MemberMapper.class);
+        mapper.insert(object);
     }
 }
