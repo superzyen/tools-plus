@@ -1,7 +1,13 @@
 package datauploadtool.mysql.service.impl;
 
+import datauploadtool.mysql.common.FilePathConstants;
+import datauploadtool.mysql.common.TableRecord;
+import datauploadtool.mysql.excel.ExcelFactory;
+import datauploadtool.mysql.excel.IExcelTemplate;
+import datauploadtool.mysql.mapper.CommMapper;
 import datauploadtool.mysql.service.tool.IToolSelectionMode;
-import datauploadtool.mysql.excel.DefultExcelTemplate;
+import datauploadtool.mysql.util.EntityUtils;
+import datauploadtool.util.BeanUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -25,6 +31,9 @@ public class MysqlUploadToolImpl implements IToolSelectionMode {
                         break;
                     case 2:
                         this.uploadExcel();
+                        break;
+                    default:
+                        return true;
                 }
 
             } catch (InputMismatchException inputMismatchException) {
@@ -42,7 +51,7 @@ public class MysqlUploadToolImpl implements IToolSelectionMode {
 
     private void openExcel() throws IOException {
         try {
-            File file = this.getFile("./upload.xlsx");
+            File file = this.getFile(FilePathConstants.DEFULT_EXCEL_PATH);
             String ap = file.getAbsolutePath();
             Runtime.getRuntime().exec("cmd /c start " + ap);
         } catch (Exception e) {
@@ -51,11 +60,17 @@ public class MysqlUploadToolImpl implements IToolSelectionMode {
         }
     }
 
-    private void uploadExcel() {
+    private void uploadExcel() throws Exception {
         try {
-
+            IExcelTemplate excelTemplate = ExcelFactory.newInstance().getExcelTemplate();
+            TableRecord tableRecord = excelTemplate.read(FilePathConstants.DEFULT_EXCEL_PATH);
+            String sql = EntityUtils.analyse(tableRecord.getTable()).getSqlStr(tableRecord);
+            log.info(sql);
+            CommMapper mapper = BeanUtils.getBean(CommMapper.class);
+            mapper.insert(sql);
+            log.info("更新成功");
         } catch (Exception e) {
-            log.error("更新上传数据时异常", e);
+            log.error("更新上传失败", e);
             throw e;
         }
     }
@@ -73,13 +88,20 @@ public class MysqlUploadToolImpl implements IToolSelectionMode {
         }
     }
 
+    /**
+     * 如果没有该文件，则生成默认的文件上传模板
+     *
+     * @author wenzy
+     * @date 2021/9/9 11:43
+     */
     private File creatDefultExcel(String filePath) throws IOException {
-        DefultExcelTemplate.create(filePath);
+        IExcelTemplate excelTemplate = ExcelFactory.newInstance().getExcelTemplate();
+        excelTemplate.create(filePath);
         return new File(filePath);
     }
 
     private void init() {
-        System.out.println("请输入序号");
+        System.out.println("请输入序号(输入其他数字返回上一层)");
         System.out.println("1. 打开excel");
         System.out.println("2. 更新上传数据");
     }

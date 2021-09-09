@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TableRecord {
+    private String table;
     private List<String> fields;
     private Map<Integer, Map<String, String>> records;
     private final static int RECORD_INIT_INDEX = 0;
@@ -35,5 +36,13 @@ public class TableRecord {
 
     public List<String> getFields() {
         return this.fields;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
+
+    public String getTable() {
+        return this.table;
     }
 }

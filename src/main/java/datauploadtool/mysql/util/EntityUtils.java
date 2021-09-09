@@ -3,8 +3,8 @@ package datauploadtool.mysql.util;
 import com.google.common.collect.Maps;
 import datauploadtool.annotation.TableField;
 import datauploadtool.exception.NoTypeMapException;
+import datauploadtool.mysql.common.EntityRegister;
 import datauploadtool.mysql.common.TableRecord;
-import datauploadtool.mysql.common.TableRegister;
 import datauploadtool.util.DateUtils;
 import datauploadtool.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class EntityUtils {
@@ -25,7 +26,9 @@ public class EntityUtils {
     private EntityUtils() {
     }
 
+    //<>-><tableField,fieldClass>
     private static final Map<Long, Map<String, Class>> threadTypeMap = Maps.newHashMap();
+    //<>-><tableField,fieldName>
     private static final Map<Long, Map<String, String>> threadNameMap = Maps.newHashMap();
 
     /**
@@ -33,7 +36,7 @@ public class EntityUtils {
      */
     public static Object transform(String tableName, Map<String, String> fieldMap) throws IllegalAccessException,
             InstantiationException, NoSuchMethodException, InvocationTargetException, ParseException {
-        Map<String, Class> entityMap = TableRegister.getInstance().getEntityMap();
+        Map<String, Class> entityMap = EntityRegister.getInstance().getEntityMap();
         if (entityMap.containsKey(tableName)) {
             Class clazz = entityMap.get(tableName);
             Constructor<?> constructor = clazz.getDeclaredConstructor();
@@ -82,7 +85,7 @@ public class EntityUtils {
      * @date 2021/9/9 10:02
      */
     public static EntityMapping analyse(String tableName) {
-        Map<String, Class> entityMap = TableRegister.getInstance().getEntityMap();
+        Map<String, Class> entityMap = EntityRegister.getInstance().getEntityMap();
         if (entityMap.containsKey(tableName)) {
             Class clazz = entityMap.get(tableName);
 
@@ -187,6 +190,15 @@ public class EntityUtils {
             return builder.toString();
         }
 
+        /**
+         * 获取实体类所有的table field的集合{@linkplain datauploadtool.annotation.TableField}
+         *
+         * @author wenzy
+         * @date 2021/9/9 15:14
+         */
+        public List<String> getTableFields() {
+            return threadNameMap.get(Thread.currentThread().getId()).keySet().stream().collect(Collectors.toList());
+        }
     }
 
 

@@ -4,22 +4,22 @@ import com.google.common.collect.Maps;
 
 import java.util.Map;
 
-public class TableRegister {
+public class EntityRegister {
     private Map<String, Class> entityMap = Maps.newHashMap();
-    private static TableRegister tableRegister;
+    private static EntityRegister entityRegister;
 
-    private TableRegister() {
+    private EntityRegister() {
     }
 
-    public static TableRegister getInstance() {
-        if (null == tableRegister) {
-            synchronized (TableRegister.class) {
-                if (null == tableRegister) {
-                    tableRegister = new TableRegister();
+    public static EntityRegister getInstance() {
+        if (null == entityRegister) {
+            synchronized (EntityRegister.class) {
+                if (null == entityRegister) {
+                    entityRegister = new EntityRegister();
                 }
             }
         }
-        return tableRegister;
+        return entityRegister;
     }
 
     public void register(IEntity iEntity) {

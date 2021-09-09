@@ -9,8 +9,8 @@ public class RegistedEntityTable {
      * 所有实体类的初始化表单
      */
     public static void initializeTable() {
-        TableRegister tableRegister = TableRegister.getInstance();
-        tableRegister.register(new Member());
-        tableRegister.register(new News());
+        EntityRegister entityRegister = EntityRegister.getInstance();
+        entityRegister.register(new Member());
+        entityRegister.register(new News());
     }
 }
